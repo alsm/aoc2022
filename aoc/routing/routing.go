@@ -1,7 +1,7 @@
 package routing
 
 import (
-	"github.com/alsm/aoc2017/aoc"
+	"github.com/alsm/aoc2022/aoc"
 )
 
 type Graph interface {

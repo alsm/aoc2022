@@ -2,35 +2,35 @@ package grid
 
 import (
 	"fmt"
-	"strings"
 	"log"
+	"strings"
 
-	"github.com/alsm/aoc2017/aoc"
+	"github.com/alsm/aoc2022/aoc"
 	"golang.org/x/exp/slices"
 )
 
 var Directions4 = []aoc.Point{
-	{X:0, Y:1},
-	{X:1, Y:0},
-	{X:0, Y:-1},
-	{X:-1, Y:0},
-} 
+	{X: 0, Y: 1},
+	{X: 1, Y: 0},
+	{X: 0, Y: -1},
+	{X: -1, Y: 0},
+}
 
 var Directions8 = []aoc.Point{
-	{X:0, Y:1},
-	{X:1, Y:1},
-	{X:1, Y:0},
-	{X:1, Y:-1},
-	{X:0, Y:-1},
-	{X:-1, Y:-1},
-	{X:-1, Y:0},
-	{X:-1, Y:1},
-} 
+	{X: 0, Y: 1},
+	{X: 1, Y: 1},
+	{X: 1, Y: 0},
+	{X: 1, Y: -1},
+	{X: 0, Y: -1},
+	{X: -1, Y: -1},
+	{X: -1, Y: 0},
+	{X: -1, Y: 1},
+}
 
 type Grid[T any] struct {
-	xLen int64
-	yLen int64
-	state [][]T
+	xLen      int64
+	yLen      int64
+	state     [][]T
 	movements []aoc.Point
 }
 
@@ -40,9 +40,9 @@ func New[T any](xLen, yLen int64, movements []aoc.Point) *Grid[T] {
 		state[y] = make([]T, xLen)
 	}
 	return &Grid[T]{
-		xLen: xLen, 
-		yLen: yLen,
-		state: state,
+		xLen:      xLen,
+		yLen:      yLen,
+		state:     state,
 		movements: movements,
 	}
 }
@@ -80,7 +80,7 @@ func (g *Grid[T]) GetState(y, x int64) T {
 
 func (g *Grid[T]) StateString() string {
 	var ret strings.Builder
-	
+
 	for _, y := range g.state {
 		for _, x := range y {
 			ret.WriteString(fmt.Sprintf("%v", x))
@@ -93,10 +93,10 @@ func (g *Grid[T]) StateString() string {
 
 func (g *Grid[T]) Clone() *Grid[T] {
 	ng := Grid[T]{
-		xLen: g.xLen,
-		yLen: g.yLen,
+		xLen:      g.xLen,
+		yLen:      g.yLen,
 		movements: slices.Clone(g.movements),
-		state: make([][]T, g.yLen),
+		state:     make([][]T, g.yLen),
 	}
 
 	for yi := range g.state {

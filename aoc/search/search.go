@@ -2,10 +2,10 @@ package search
 
 import (
 	"log"
-	
-	"github.com/alsm/aoc2017/aoc"
-	"github.com/alsm/aoc2017/aoc/queue"
-	"github.com/alsm/aoc2017/aoc/routing"
+
+	"github.com/alsm/aoc2022/aoc"
+	"github.com/alsm/aoc2022/aoc/queue"
+	"github.com/alsm/aoc2022/aoc/routing"
 )
 
 func BFS(g routing.Graph, start aoc.Point, goal aoc.Point) []aoc.Point {
@@ -32,7 +32,7 @@ func BFS(g routing.Graph, start aoc.Point, goal aoc.Point) []aoc.Point {
 	}
 
 	ret := []aoc.Point{goal}
-	for n := cameFrom[goal]; n != nil; n = cameFrom[*n]{
+	for n := cameFrom[goal]; n != nil; n = cameFrom[*n] {
 		ret = append(ret, *n)
 	}
 

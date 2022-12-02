@@ -6,11 +6,11 @@ import (
 	"os"
 	"strconv"
 
-"golang.org/x/exp/constraints"
-	"github.com/alsm/aoc2017/aoc/collections"
+	"github.com/alsm/aoc2022/aoc/collections"
+	"golang.org/x/exp/constraints"
 )
 
-func MustSliceFromFile[T any](file string, conv func(string) T) []T {
+func SliceFromFile[T any](file string, conv func(string) T) []T {
 	var ret []T
 
 	f, err := os.Open(file)
@@ -75,7 +75,7 @@ type Point struct {
 }
 
 func (p *Point) MDistance(b Point) int64 {
-	return Abs(p.X - b.X) + Abs(p.Y - b.Y)
+	return Abs(p.X-b.X) + Abs(p.Y-b.Y)
 }
 
 func (p *Point) Add(b Point) Point {
@@ -89,7 +89,7 @@ func IPow(base, exp int64) int64 {
 	ret := int64(1)
 
 	for {
-		if exp & 1 > 0  {
+		if exp&1 > 0 {
 			ret *= base
 		}
 		exp >>= 1

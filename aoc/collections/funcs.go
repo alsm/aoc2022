@@ -5,8 +5,8 @@ import (
 	"strings"
 
 	"golang.org/x/exp/constraints"
-
 	"golang.org/x/exp/maps"
+	"golang.org/x/exp/slices"
 )
 
 // Union return a slice of the unique union of
@@ -169,6 +169,14 @@ func Max[T constraints.Ordered](in []T) T {
 	return max
 }
 
+func MaxN[T constraints.Ordered](in []T, n int) []T {
+	return Reverse(Sort(in))[:n]
+}
+
+func MinN[T constraints.Ordered](in []T, n int) []T {
+	return Sort(in)
+}
+
 // MaxWithIndex returns the index of, and the maximum value in the input slice
 func MaxWithIndex[T constraints.Ordered](in []T) (int, T) {
 	if len(in) == 1 {
@@ -180,7 +188,7 @@ func MaxWithIndex[T constraints.Ordered](in []T) (int, T) {
 	for i, v := range in[1:] {
 		if v > max {
 			max = v
-			index = i+1
+			index = i + 1
 		}
 	}
 
@@ -214,7 +222,7 @@ func MinWithIndex[T constraints.Ordered](in []T) (int, T) {
 	for i, v := range in[1:] {
 		if v < min {
 			min = v
-			index = i+1
+			index = i + 1
 		}
 	}
 
@@ -298,6 +306,22 @@ func Join[T any](in []T, sep string) string {
 	}
 
 	return b.String()[1:]
+}
+
+func Sort[T constraints.Ordered](in []T) []T {
+	slices.Sort(in)
+
+	return slices.Clone(in)
+}
+
+func Reverse[T any](in []T) []T {
+	ret := make([]T, len(in))
+
+	for i := 0; i < len(in); i++ {
+		ret[len(in)-1-i] = in[i]
+	}
+
+	return ret
 }
 
 // Tally takes a slice of comparable items and returns a map with a tally
