@@ -24,6 +24,27 @@ func Union[T comparable](x []T, y []T) []T {
 	return maps.Keys(hash)
 }
 
+func Intersection[T comparable](x ...[]T) []T {
+	hash := make(map[T]struct{})
+	output := make(map[T]struct{})
+
+	for _, v := range x[0] {
+		hash[v] = struct{}{}
+	}
+
+	for _, y := range x[1:] {
+		for _, v := range y {
+			if _, ok := hash[v]; ok {
+				output[v] = struct{}{}
+			}
+		}
+		hash = output
+		output = make(map[T]struct{})
+	}
+
+	return maps.Keys(hash)
+}
+
 // Select returns a slice of the input values that return
 // true when evalueted by f
 func Select[T any](in []T, f func(i T) bool) []T {
@@ -364,4 +385,18 @@ func KeyWithValue[T comparable, V comparable](in map[T]V, val V) T {
 	}
 
 	return e
+}
+
+func Chunk[T any](in []T, size int) [][]T {
+	var ret [][]T
+	for i := 0; i < len(in)/size; i++ {
+		skip := size
+		rem := len(in) - i*size
+		if rem < skip {
+			skip = rem
+		}
+		ret = append(ret, in[i*size:i*size+skip])
+	}
+
+	return ret
 }
