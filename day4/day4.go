@@ -24,17 +24,8 @@ func do1(in [][4]int) int {
 	})
 }
 
-func toRange(x,y int) []int {
-	var ret []int
-	for i:= x; i <= y; i++ {
-		ret = append(ret, i)
-	}
-
-	return ret
-}
-
 func do2(in [][4]int) int {
 	return Count(in, func(a [4]int) bool {
-		return len(Intersection(toRange(a[0],a[1]), toRange(a[2],a[3]))) > 0
+		return a[0] <= a[3] && a[1] >= a[2] || a[2] <= a[1] && a[3] >= a[0]
 	})
 }
