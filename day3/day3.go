@@ -35,7 +35,7 @@ func do1(in []string) int {
 
 func do2(in []string) int {
 	groups := Chunk(in, 3)
-	return Sum(Map(groups, func (x []string) int {
+	return Sum(Map(groups, func(x []string) int {
 		return slices.Index(charValues, Intersection([]rune(x[0]), []rune(x[1]), []rune(x[2]))[0])
 	}))
 }
@@ -52,7 +52,7 @@ func toBits(s string) int64 {
 func do1second(in []string) int {
 	var ret int
 	for _, l := range in {
-		 ret += int(math.Log2(float64(toBits(l[:len(l)/2]) & toBits(l[len(l)/2:]))))
+		ret += int(math.Log2(float64(toBits(l[:len(l)/2]) & toBits(l[len(l)/2:]))))
 	}
 
 	return ret
@@ -63,7 +63,7 @@ func do2second(in []string) int {
 	val := int64(math.MaxInt64)
 	for i, l := range in {
 		val &= toBits(l)
-		if (i+1) % 3 == 0 {
+		if (i+1)%3 == 0 {
 			ret += int(math.Log2(float64(val)))
 			val = math.MaxInt64
 		}

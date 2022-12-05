@@ -1,5 +1,10 @@
 package list
 
+import (
+	"fmt"
+	"strings"
+)
+
 type List[T any] struct {
 	root Element[T]
 	len  int
@@ -176,4 +181,13 @@ func (l *List[T]) PushFrontList(other *List[T]) {
 	for i, e := other.Len(), other.Back(); i > 0; i, e = i-1, e.Prev() {
 		l.insertValue(e.Value, &l.root)
 	}
+}
+func (l *List[T]) String() string {
+	var ret strings.Builder
+
+	for i := l.Front(); i != nil; i = i.Next() {
+		ret.WriteString(fmt.Sprintf("%v, ", i.Value))
+	}
+
+	return ret.String()
 }
