@@ -16,11 +16,9 @@ type Entry struct {
 }
 
 func (e *Entry) Size() int {
-	var size int
-	for _, s := range e.Subs {
-		size += s.Size()
-	}
-	return e.FileSize + size
+	return e.FileSize + Sum(Map(e.Subs, func(e *Entry) int {
+		return e.Size()
+	}))
 }
 
 func (e *Entry) SizeSubDirs() []int {
