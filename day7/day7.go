@@ -9,10 +9,10 @@ import (
 )
 
 type Entry struct {
-	Name string
+	Name     string
 	FileSize int
-	Parent *Entry
-	Subs []*Entry
+	Parent   *Entry
+	Subs     []*Entry
 }
 
 func (e *Entry) Size() int {
@@ -23,9 +23,9 @@ func (e *Entry) Size() int {
 	return e.FileSize + size
 }
 
-func (e *Entry) SizeSubDirs() []int{
+func (e *Entry) SizeSubDirs() []int {
 	var ret []int
-	for _, s := range e.Subs{
+	for _, s := range e.Subs {
 		ret = append(ret, s.Size())
 		ret = append(ret, s.SizeSubDirs()...)
 	}
@@ -42,7 +42,7 @@ func main() {
 		Name: "root",
 	}
 	e := root
-	for _,c := range cmds[2:] {
+	for _, c := range cmds[2:] {
 		switch c[0] {
 		case "cd ..":
 			e = e.Parent
@@ -55,7 +55,7 @@ func main() {
 		default:
 			var dir string
 			fmt.Sscanf(c[0], "cd %s", &dir)
-			ne := &Entry{Name: dir,Parent: e}
+			ne := &Entry{Name: dir, Parent: e}
 			e.Subs = append(e.Subs, ne)
 			e = ne
 		}
@@ -66,16 +66,13 @@ func main() {
 }
 
 func do1(root *Entry) int {
-	dirs := root.SizeSubDirs()
-	subs := Select(dirs, func(i int) bool{
+	return Sum(Select(root.SizeSubDirs(), func(i int) bool {
 		return i <= 100000
-	})
-	return Sum(subs)
+	}))
 }
 
 func do2(root *Entry) int {
-	dirs := root.SizeSubDirs()
-	return Min(Select(dirs, func(i int) bool{
-		return i >= 30000000 - (70000000 - root.Size())
+	return Min(Select(root.SizeSubDirs(), func(i int) bool {
+		return i >= 30000000-(70000000-root.Size())
 	}))
 }
