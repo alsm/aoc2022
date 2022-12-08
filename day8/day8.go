@@ -32,17 +32,10 @@ func do1(in *grid.Grid[int]) int {
 	var trees int
 	for x := int64(1); x < in.XLen()-1; x++ {
 		for y := int64(1); y < in.YLen()-1; y++ {
-			routes := Map(grid.Directions4, func(i aoc.Point) []int {
-				return in.GetSliceToEdge(x, y, i)
-			})
+			routes := Map(grid.Directions4, func(i aoc.Point) []int { return in.GetSliceToEdge(x, y, i) })
 			if Any(Map(routes, func(i []int) bool {
-				return All(i[1:], func(j int) bool {
-					return i[0] > j
-				})
-
-			}), func(visible bool) bool {
-				return visible
-			}) {
+				return All(i[1:], func(j int) bool { return i[0] > j })
+			}), func(visible bool) bool { return visible }) {
 				trees++
 			}
 		}
@@ -54,17 +47,11 @@ func do2(in *grid.Grid[int]) int {
 	var bestScore int
 	for x := int64(0); x < in.XLen(); x++ {
 		for y := int64(0); y < in.YLen(); y++ {
-			scenes := Map(grid.Directions4, func(i aoc.Point) []int {
-				return in.GetSliceToEdge(x, y, i)
-			})
+			scenes := Map(grid.Directions4, func(i aoc.Point) []int { return in.GetSliceToEdge(x, y, i) })
 			score := Product(Map(scenes, func(sight []int) int {
-				index := slices.IndexFunc(sight[1:], func(i int) bool {
-					return i >= sight[0]
-				})
+				index := slices.IndexFunc(sight[1:], func(i int) bool { return i >= sight[0] })
 				if index == -1 {
-					if All(sight[1:], func(i int) bool {
-						return i < sight[0]
-					}) {
+					if All(sight[1:], func(i int) bool { return i < sight[0] }) {
 						return len(sight[1:])
 					}
 					return 0
