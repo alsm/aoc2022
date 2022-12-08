@@ -2,7 +2,6 @@ package grid
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/alsm/aoc2022/aoc"
@@ -47,7 +46,7 @@ func New[T any](xLen, yLen int64, movements []aoc.Point) *Grid[T] {
 	}
 }
 
-func (g *Grid[T]) isValidPoint(x, y int64) bool {
+func (g *Grid[T]) isValid(x, y int64) bool {
 	switch {
 	case x < 0, x >= g.xLen, y < 0, y >= g.yLen:
 		return false
@@ -56,15 +55,41 @@ func (g *Grid[T]) isValidPoint(x, y int64) bool {
 	}
 }
 
+func (g *Grid[T]) isValidPoint(p aoc.Point) bool {
+	switch {
+	case p.X < 0, p.X >= g.xLen, p.Y < 0, p.Y >= g.yLen:
+		return false
+	default:
+		return true
+	}
+}
+
 func (g *Grid[T]) Neighbours(p aoc.Point) []aoc.Point {
-	log.Println("beighbours")
 	var ret []aoc.Point
 
 	for _, m := range g.movements {
 		np := p.Add(m)
-		if g.isValidPoint(np.X, np.Y) {
+		if g.isValidPoint(np) {
 			ret = append(ret, np)
 		}
+	}
+
+	return ret
+}
+
+func (g *Grid[T]) XLen() int64 {
+	return g.xLen
+}
+
+func (g *Grid[T]) YLen() int64 {
+	return g.yLen
+}
+
+func (g *Grid[T]) GetSliceToEdge(x, y int64, movement aoc.Point) []T {
+	var ret []T
+	p := aoc.Point{x, y}
+	for ; g.isValidPoint(p); p = p.Add(movement) {
+		ret = append(ret, g.GetState(p.Y, p.X))
 	}
 
 	return ret

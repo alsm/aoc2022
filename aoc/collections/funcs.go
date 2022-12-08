@@ -298,7 +298,7 @@ func Sum[T constraints.Integer | constraints.Float](in []T) T {
 
 // Product returns the product of values in the input slice
 func Product[T constraints.Integer | constraints.Float](in []T) T {
-	var out T
+	var out T = 1
 
 	for _, v := range in {
 		out *= v

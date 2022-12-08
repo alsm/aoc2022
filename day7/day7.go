@@ -2,80 +2,73 @@ package main
 
 import (
 	"fmt"
-	"os"
+	"path"
+	"strconv"
 	"strings"
 
-	. "github.com/alsm/aoc2022/aoc/collections"
+	"github.com/alsm/aoc2022/aoc"
 )
 
-type Entry struct {
-	Name string
-	FileSize int
-	Parent *Entry
-	Subs []*Entry
-}
-
-func (e *Entry) Size() int {
-	var size int
-	for _, s := range e.Subs {
-		size += s.Size()
-	}
-	return e.FileSize + size
-}
-
-func (e *Entry) SizeSubDirs() []int{
-	var ret []int
-	for _, s := range e.Subs{
-		ret = append(ret, s.Size())
-		ret = append(ret, s.SizeSubDirs()...)
-	}
-
-	return ret
-}
-
 func main() {
-	data, _ := os.ReadFile("day7.txt")
-	cmds := Map(strings.Split(string(data), "$ "), func(s string) []string {
-		return strings.Split(s, "\n")
+	lines := aoc.SliceFromFile("day7.txt", func(i string) string {
+		return i
 	})
-	root := &Entry{
-		Name: "root",
-	}
-	e := root
-	for _,c := range cmds[2:] {
-		switch c[0] {
-		case "cd ..":
-			e = e.Parent
-		case "ls":
-			for _, l := range c[1:] {
-				var size int
-				fmt.Sscanf(l, "%d ", &size)
-				e.FileSize += size
-			}
-		default:
-			var dir string
-			fmt.Sscanf(c[0], "cd %s", &dir)
-			ne := &Entry{Name: dir,Parent: e}
-			e.Subs = append(e.Subs, ne)
-			e = ne
+	fmt.Println("DAY 7")
+	fmt.Println("Part 1:", PartOneSolution(lines))
+	fmt.Println("Part 2:", PartTwoSolution(lines))
+}
+
+func parseDirectories(lines []string) map[string]int {
+
+	directorySizes := make(map[string]int)
+
+	cwd := ""
+
+	for _, line := range lines {
+		if strings.HasPrefix(line, "$ cd") {
+			dir := strings.Trim(line[5:], " ")
+			cwd = path.Join(cwd, dir)
+		} else if strings.HasPrefix(line, "$ ls") || strings.HasPrefix(line, "dir") {
+			continue
+		} else {
+			file := strings.Split(line, " ")
+			fileSize, _ := strconv.Atoi(file[0])
+			directorySizes[cwd] += fileSize
 		}
 	}
 
-	fmt.Println(do1(root))
-	fmt.Println(do2(root))
+	return directorySizes
 }
 
-func do1(root *Entry) int {
-	dirs := root.SizeSubDirs()
-	subs := Select(dirs, func(i int) bool{
-		return i <= 100000
-	})
-	return Sum(subs)
+func PartOneSolution(lines []string) uint64 {
+	directorySizes := parseDirectories(lines)
+
+	for n, v := range directorySizes {
+		fmt.Println(n, v)
+	}
+
+	totalMap := make(map[string]int)
+
+	for key, value := range directorySizes {
+		total := value
+		for innerKey, innerValue := range directorySizes {
+			if key != innerKey && strings.HasPrefix(innerKey, key) {
+				total += innerValue
+			}
+		}
+		totalMap[key] = total
+	}
+
+	var finalTotal uint64
+	for _, v := range totalMap {
+		if v < 100_000 {
+			finalTotal += uint64(v)
+		}
+	}
+
+	return finalTotal
 }
 
-func do2(root *Entry) int {
-	dirs := root.SizeSubDirs()
-	return Min(Select(dirs, func(i int) bool{
-		return i >= 30000000 - (70000000 - root.Size())
-	}))
+func PartTwoSolution(lines []string) int {
+	return -1
 }
