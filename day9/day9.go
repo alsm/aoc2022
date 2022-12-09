@@ -30,10 +30,6 @@ func getDir(t, h *aoc.Point, moves [4]aoc.Point) aoc.Point {
 	return moves[move]
 }
 
-func moveHead(p *aoc.Point, d int) {
-	*p = p.Add(grid.Directions4[d])
-}
-
 func moveTail(t, h *aoc.Point) {
 	switch {
 	case t.Neighbour(*h):
@@ -44,36 +40,28 @@ func moveTail(t, h *aoc.Point) {
 	}
 }
 
-func do1(in [][2]int) int {
-	var head, tail aoc.Point
+func getRopey(moves [][2]int, knots int) *grid.IGrid[rune] {
+	rope := make([]aoc.Point, knots)
 	positions := grid.NewIGrid[rune](grid.Directions4)
-	positions.SetState(tail, '#')
+	positions.SetState(rope[knots-1], '#')
 
-	for _, m := range in {
+	for _, m := range moves {
 		for i := 0; i < m[1]; i++ {
-			moveHead(&head, m[0])
-			moveTail(&tail, &head)
-			positions.SetState(tail, '#')
+			rope[0] = rope[0].Add(grid.Directions4[m[0]])
+			for j := 0; j < knots-1; j++ {
+				moveTail(&rope[j+1], &rope[j])
+			}
+			positions.SetState(rope[knots-1], '#')
 		}
 	}
 
-	return len(positions.States())
+	return positions
+}
+
+func do1(in [][2]int) int {
+	return len(getRopey(in, 2).States())
 }
 
 func do2(in [][2]int) int {
-	rope := make([]aoc.Point, 10)
-	positions := grid.NewIGrid[rune](grid.Directions4)
-	positions.SetState(rope[9], '#')
-
-	for _, m := range in {
-		for i := 0; i < m[1]; i++ {
-			moveHead(&rope[0], m[0])
-			for j := 0; j < 9; j++ {
-				moveTail(&rope[j+1], &rope[j])
-			}
-			positions.SetState(rope[9], '#')
-		}
-	}
-
-	return len(positions.States())
+	return len(getRopey(in, 10).States())
 }
