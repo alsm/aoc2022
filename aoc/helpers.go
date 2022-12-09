@@ -85,6 +85,11 @@ func (p *Point) Add(b Point) Point {
 	}
 }
 
+func (p *Point) Neighbour(b Point) bool {
+	dx, dy := Abs(b.X-p.X), Abs(b.Y-p.Y)
+	return dx <= 1 && dy <= 1
+}
+
 func IPow(base, exp int64) int64 {
 	ret := int64(1)
 
