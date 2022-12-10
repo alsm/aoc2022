@@ -69,6 +69,17 @@ func Abs[T constraints.Integer | constraints.Float](x T) T {
 	return x
 }
 
+func Sign[T constraints.Integer | constraints.Float](x T) T {
+	switch {
+	case x < 0:
+		return -T(1)
+	case x > 0:
+		return 1
+	default:
+		return 0
+	}
+}
+
 type Point struct {
 	X int64
 	Y int64

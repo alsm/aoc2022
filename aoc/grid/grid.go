@@ -96,7 +96,9 @@ func (g *Grid[T]) GetSliceToEdge(x, y int64, movement aoc.Point) []T {
 }
 
 func (g *Grid[T]) SetState(x, y int64, state T) {
-	g.state[y][x] = state
+	if g.isValid(x, y) {
+		g.state[y][x] = state
+	}
 }
 
 func (g *Grid[T]) GetState(y, x int64) T {
