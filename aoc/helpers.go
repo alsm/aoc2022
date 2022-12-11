@@ -80,6 +80,28 @@ func Sign[T constraints.Integer | constraints.Float](x T) T {
 	}
 }
 
+// greatest common divisor (GCD) via Euclidean algorithm
+func GCD(a, b int) int {
+	for b != 0 {
+		t := b
+		b = a % b
+		a = t
+	}
+	return a
+}
+
+// find Least Common Multiple (LCM) via GCD
+func LCM(ints ...int) int {
+	result := ints[0] * ints[1] / GCD(ints[0], ints[1])
+	ints = ints[2:]
+
+	for i := 0; i < len(ints); i++ {
+		result = LCM(result, ints[i])
+	}
+
+	return result
+}
+
 type Point struct {
 	X int64
 	Y int64

@@ -38,6 +38,16 @@ func (l *List[T]) Init() *List[T] {
 	return l
 }
 
+func (l *List[T]) InitFromSlice(in []T) *List[T] {
+	l.root.next = &l.root
+	l.root.prev = &l.root
+	l.len = 0
+	for _, v := range in {
+		l.PushBack(v)
+	}
+	return l
+}
+
 func New[T any]() *List[T] {
 	return new(List[T]).Init()
 }
@@ -111,6 +121,12 @@ func (l *List[T]) Remove(e *Element[T]) T {
 		// in l or l == nil (e is a zero Element) and l.remove will crash
 		l.remove(e)
 	}
+	return e.Value
+}
+
+func (l *List[T]) PopFront() T {
+	e := l.Front()
+	l.remove(e)
 	return e.Value
 }
 
