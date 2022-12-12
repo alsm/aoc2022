@@ -118,6 +118,32 @@ func (g *Grid[T]) StateString() string {
 	return ret.String()
 }
 
+func (g *Grid[T]) StateMap() map[aoc.Point]T {
+	ret := make(map[aoc.Point]T)
+
+	for y, l := range g.state {
+		for x, s := range l {
+			ret[aoc.Point{int64(x), int64(y)}] = s
+		}
+	}
+
+	return ret
+}
+
+func (g *Grid[T]) StateMapWhere(f func(T) bool) map[aoc.Point]T {
+	ret := make(map[aoc.Point]T)
+
+	for y, l := range g.state {
+		for x, s := range l {
+			if f(s) {
+				ret[aoc.Point{int64(x), int64(y)}] = s
+			}
+		}
+	}
+
+	return ret
+}
+
 func (g *Grid[T]) Clone() *Grid[T] {
 	ng := Grid[T]{
 		xLen:      g.xLen,

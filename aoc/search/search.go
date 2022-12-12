@@ -1,7 +1,7 @@
 package search
 
 import (
-	"log"
+	// "log"
 
 	"github.com/alsm/aoc2022/aoc"
 	"github.com/alsm/aoc2022/aoc/queue"
@@ -21,7 +21,7 @@ func BFS(g routing.Graph, start aoc.Point, goal aoc.Point) []aoc.Point {
 			break
 		}
 
-		log.Println(g.Neighbours(current))
+		// log.Println(g.Neighbours(current))
 
 		for _, n := range g.Neighbours(current) {
 			if _, ok := cameFrom[n]; !ok {
