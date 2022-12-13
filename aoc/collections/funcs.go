@@ -82,12 +82,28 @@ func Map[T any, V any](in []T, f func(T) V) []V {
 	return out
 }
 
+func MapWithIndex[T any, V any](in []T, f func(int, T) V) []V {
+	out := make([]V, len(in))
+	for i, v := range in {
+		out[i] = f(i, v)
+	}
+
+	return out
+}
+
 func MapM[T comparable, V any](in []T, f func(T) (T, V)) map[T]V {
 	ret := make(map[T]V)
 	for _, x := range in {
 		k, v := f(x)
 		ret[k] = v
 	}
+
+	return ret
+}
+
+func Carve[T any](in []T, i, j int) []T {
+	ret := in[:i]
+	ret = append(ret, in[j:]...)
 
 	return ret
 }
