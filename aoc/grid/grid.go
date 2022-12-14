@@ -46,7 +46,23 @@ func New[T any](xLen, yLen int64, movements []aoc.Point) *Grid[T] {
 	}
 }
 
-func (g *Grid[T]) isValid(x, y int64) bool {
+func NewWithDefault[T any](xLen, yLen int64, movements []aoc.Point, def T) *Grid[T] {
+	state := make([][]T, yLen)
+	for y := int64(0); y < yLen; y++ {
+		state[y] = make([]T, xLen)
+		for i := range state[y] {
+			state[y][i] = def
+		}
+	}
+	return &Grid[T]{
+		xLen:      xLen,
+		yLen:      yLen,
+		state:     state,
+		movements: movements,
+	}
+}
+
+func (g *Grid[T]) IsValid(x, y int64) bool {
 	switch {
 	case x < 0, x >= g.xLen, y < 0, y >= g.yLen:
 		return false
@@ -55,7 +71,7 @@ func (g *Grid[T]) isValid(x, y int64) bool {
 	}
 }
 
-func (g *Grid[T]) isValidPoint(p aoc.Point) bool {
+func (g *Grid[T]) IsValidPoint(p aoc.Point) bool {
 	switch {
 	case p.X < 0, p.X >= g.xLen, p.Y < 0, p.Y >= g.yLen:
 		return false
@@ -69,7 +85,7 @@ func (g *Grid[T]) Neighbours(p aoc.Point) []aoc.Point {
 
 	for _, m := range g.movements {
 		np := p.Add(m)
-		if g.isValidPoint(np) {
+		if g.IsValidPoint(np) {
 			ret = append(ret, np)
 		}
 	}
@@ -88,7 +104,7 @@ func (g *Grid[T]) YLen() int64 {
 func (g *Grid[T]) GetSliceToEdge(x, y int64, movement aoc.Point) []T {
 	var ret []T
 	p := aoc.Point{x, y}
-	for ; g.isValidPoint(p); p = p.Add(movement) {
+	for ; g.IsValidPoint(p); p = p.Add(movement) {
 		ret = append(ret, g.GetState(p.Y, p.X))
 	}
 
@@ -96,12 +112,12 @@ func (g *Grid[T]) GetSliceToEdge(x, y int64, movement aoc.Point) []T {
 }
 
 func (g *Grid[T]) SetState(x, y int64, state T) {
-	if g.isValid(x, y) {
+	if g.IsValid(x, y) {
 		g.state[y][x] = state
 	}
 }
 
-func (g *Grid[T]) GetState(y, x int64) T {
+func (g *Grid[T]) GetState(x, y int64) T {
 	return g.state[y][x]
 }
 

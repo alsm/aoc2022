@@ -118,6 +118,21 @@ func (p *Point) Add(b Point) Point {
 	}
 }
 
+func (p *Point) Line(b Point) []Point {
+	var ret []Point
+	dx := b.X - p.X
+	dy := b.Y - p.Y
+	sx := Sign(dx)
+	sy := Sign(dy)
+
+	num := Abs(dx + dy)
+	for i := int64(0); i <= num; i++ {
+		ret = append(ret, Point{X: p.X + i*sx, Y: p.Y + i*sy})
+	}
+
+	return ret
+}
+
 func (p *Point) Neighbour(b Point) bool {
 	dx, dy := Abs(b.X-p.X), Abs(b.Y-p.Y)
 	return dx <= 1 && dy <= 1
