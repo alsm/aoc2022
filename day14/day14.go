@@ -101,7 +101,5 @@ func do2(rocks [][]aoc.Point, maxY int64) int {
 		count++
 	}
 
-	fmt.Println(c.StateString())
-
 	return count + 1
 }
