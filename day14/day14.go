@@ -10,7 +10,7 @@ import (
 	"github.com/alsm/aoc2022/aoc/grid"
 )
 
-var startPoint = aoc.Point{X: 200, Y: 0}
+var startPoint = aoc.Point{X: 500, Y: 0}
 
 func main() {
 	var maxY int64
@@ -23,7 +23,7 @@ func main() {
 			if yv > maxY {
 				maxY = yv
 			}
-			ret = append(ret, aoc.Point{X: xv - 300, Y: yv})
+			ret = append(ret, aoc.Point{X: xv, Y: yv})
 		}
 		return ret
 	})
@@ -44,7 +44,7 @@ type Cave struct {
 
 func NewCave(maxY int64) *Cave {
 	return &Cave{
-		Grid: grid.NewWithDefault(300, maxY, sandDirections, "."),
+		Grid: grid.NewWithDefault(1000, maxY, sandDirections, "."),
 	}
 }
 
