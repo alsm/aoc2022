@@ -111,6 +111,10 @@ func (p *Point) MDistance(b Point) int64 {
 	return Abs(p.X-b.X) + Abs(p.Y-b.Y)
 }
 
+func (p *Point) MDistanceXY(x, y int64) int64 {
+	return Abs(p.X-x) + Abs(p.Y-y)
+}
+
 func (p *Point) Add(b Point) Point {
 	return Point{
 		X: p.X + b.X,

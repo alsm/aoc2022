@@ -58,6 +58,17 @@ func Select[T any](in []T, f func(i T) bool) []T {
 	return out
 }
 
+func SelectMap[T comparable, V any](in map[T]V, f func(i T, j V) bool) map[T]V {
+	out := make(map[T]V)
+	for k, v := range in {
+		if f(k, v) {
+			out[k] = v
+		}
+	}
+
+	return out
+}
+
 // Select returns a slice of the input values that return
 // false when evalueted by f
 func Reject[T any](in []T, f func(T) bool) []T {
@@ -80,6 +91,12 @@ func Map[T any, V any](in []T, f func(T) V) []V {
 	}
 
 	return out
+}
+
+func Each[T any](in []T, f func(T)) {
+	for _, v := range in {
+		f(v)
+	}
 }
 
 func MapWithIndex[T any, V any](in []T, f func(int, T) V) []V {
