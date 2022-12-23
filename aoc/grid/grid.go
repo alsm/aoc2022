@@ -117,6 +117,12 @@ func (g *Grid[T]) SetState(x, y int64, state T) {
 	}
 }
 
+func (g *Grid[T]) SetStateP(p aoc.Point, state T) {
+	if g.IsValidPoint(p) {
+		g.state[p.Y][p.X] = state
+	}
+}
+
 func (g *Grid[T]) GetState(x, y int64) T {
 	return g.state[y][x]
 }
@@ -126,6 +132,19 @@ func (g *Grid[T]) StateString() string {
 
 	for _, y := range g.state {
 		for _, x := range y {
+			ret.WriteString(fmt.Sprintf("%v", x))
+		}
+		ret.WriteRune('\n')
+	}
+
+	return ret.String()
+}
+
+func (g *Grid[T]) StateStringInvertY() string {
+	var ret strings.Builder
+
+	for y := len(g.state) - 1; y >= 0; y-- {
+		for _, x := range g.state[y] {
 			ret.WriteString(fmt.Sprintf("%v", x))
 		}
 		ret.WriteRune('\n')

@@ -1,6 +1,6 @@
 package ring
 
-type Ring[T any] struct {
+type Ring[T comparable] struct {
 	next, prev *Ring[T]
 	Value      T
 }
@@ -9,6 +9,17 @@ func (r *Ring[T]) init() *Ring[T] {
 	r.next = r
 	r.prev = r
 	return r
+}
+
+func (r *Ring[T]) Find(e T) *Ring[T] {
+	for i := 0; i < r.Len(); i++ {
+		if r.Value == e {
+			return r
+		}
+		r = r.Next()
+	}
+
+	return nil
 }
 
 func (r *Ring[T]) Next() *Ring[T] {
@@ -42,7 +53,33 @@ func (r *Ring[T]) Move(n int) *Ring[T] {
 	return r
 }
 
-func New[T any](n int) *Ring[T] {
+func (r *Ring[T]) Shift(n int) *Ring[T] {
+	if r.next == nil {
+		return r.init()
+	}
+	if n == 0 {
+		return r
+	}
+	e := &Ring[T]{
+		Value: r.Value,
+	}
+	r.prev.next, r.next.prev = r.next, r.prev
+	switch {
+	case n < 0:
+		for ; n <= 0; n++ {
+			r = r.prev
+		}
+	case n > 0:
+		for ; n > 0; n-- {
+			r = r.next
+		}
+	}
+	e.next, e.prev = r.next, r
+	r.next, r.next.prev = e, e
+	return r
+}
+
+func New[T comparable](n int) *Ring[T] {
 	if n <= 0 {
 		return nil
 	}
@@ -50,6 +87,22 @@ func New[T any](n int) *Ring[T] {
 	p := r
 	for i := 1; i < n; i++ {
 		p.next = &Ring[T]{prev: p}
+		p = p.next
+	}
+	p.next = r
+	r.prev = p
+	return r
+}
+
+func NewFromSlice[T comparable](in []T) *Ring[T] {
+	if len(in) == 0 {
+		return nil
+	}
+	r := new(Ring[T])
+	r.Value = in[0]
+	p := r
+	for i := 1; i < len(in); i++ {
+		p.next = &Ring[T]{prev: p, Value: in[i]}
 		p = p.next
 	}
 	p.next = r

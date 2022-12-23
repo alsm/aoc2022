@@ -34,3 +34,15 @@ func (s Set[T]) Delete(x T) {
 func (s Set[T]) Clear() {
 	s = make(map[T]struct{})
 }
+
+func (s Set[T]) Sub(o Set[T]) {
+	for k := range o {
+		delete(s, k)
+	}
+}
+
+func (s Set[T]) SubA(o []T) {
+	for _, k := range o {
+		delete(s, k)
+	}
+}

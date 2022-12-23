@@ -99,6 +99,12 @@ func Each[T any](in []T, f func(T)) {
 	}
 }
 
+func EachMap[T comparable, V any](in map[T]V, f func(T, V)) {
+	for k, v := range in {
+		f(k, v)
+	}
+}
+
 func MapWithIndex[T any, V any](in []T, f func(int, T) V) []V {
 	out := make([]V, len(in))
 	for i, v := range in {
@@ -113,6 +119,16 @@ func MapM[T comparable, V any](in []T, f func(T) (T, V)) map[T]V {
 	for _, x := range in {
 		k, v := f(x)
 		ret[k] = v
+	}
+
+	return ret
+}
+
+func MapMap[T comparable, V any, X comparable, Y any](in map[T]V, f func(T, V) (X, Y)) map[X]Y {
+	ret := make(map[X]Y)
+	for k, v := range in {
+		nk, nv := f(k, v)
+		ret[nk] = nv
 	}
 
 	return ret
@@ -249,6 +265,23 @@ func MaxWithIndex[T constraints.Ordered](in []T) (int, T) {
 	return index, max
 }
 
+func MaxMap[T comparable, V constraints.Ordered](in map[T]V) (T, V) {
+	if len(in) == 1 {
+		return maps.Keys(in)[0], maps.Values(in)[0]
+	}
+
+	var max V
+	var key T
+	for k, v := range in {
+		if v > max {
+			max = v
+			key = k
+		}
+	}
+
+	return key, max
+}
+
 // Min returns the minimum value in the input slice
 func Min[T constraints.Ordered](in []T) T {
 	if len(in) == 1 {
@@ -353,6 +386,32 @@ func Combinations[T any](in []T) [][2]T {
 	return out
 }
 
+func Permutations[T any](in []T) [][]T {
+	var helper func([]T, int)
+	var ret [][]T
+
+	helper = func(in []T, n int) {
+		if n == 1 {
+			ret = append(ret, slices.Clone(in))
+		} else {
+			for i := 0; i < n; i++ {
+				helper(in, n-1)
+				if n%2 == 1 {
+					tmp := in[i]
+					in[i] = in[n-1]
+					in[n-1] = tmp
+				} else {
+					tmp := in[0]
+					in[0] = in[n-1]
+					in[n-1] = tmp
+				}
+			}
+		}
+	}
+	helper(in, len(in))
+	return ret
+}
+
 func Join[T any](in []T, sep string) string {
 	var b strings.Builder
 	for _, v := range in {
@@ -429,6 +488,17 @@ func Chunk[T any](in []T, size int) [][]T {
 			skip = rem
 		}
 		ret = append(ret, in[i*size:i*size+skip])
+	}
+
+	return ret
+}
+
+func SubSlice[T comparable](a, b []T) []T {
+	var ret []T
+	for _, v := range a {
+		if !slices.Contains(b, v) {
+			ret = append(ret, v)
+		}
 	}
 
 	return ret

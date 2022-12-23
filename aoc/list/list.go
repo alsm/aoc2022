@@ -198,6 +198,17 @@ func (l *List[T]) PushFrontList(other *List[T]) {
 		l.insertValue(e.Value, &l.root)
 	}
 }
+
+func (l *List[T]) ToList() []T {
+	var ret []T
+
+	for e := l.Front(); e != nil; e = e.next {
+		ret = append(ret, e.Value)
+	}
+
+	return ret
+}
+
 func (l *List[T]) String() string {
 	var ret strings.Builder
 
